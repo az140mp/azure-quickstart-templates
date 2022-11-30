@@ -30,6 +30,17 @@ configuration CreateADPDC
             Name = "DNS"		
         }
 
+        Script GuestAgent
+        {
+            SetScript  = {
+                Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\WindowsAzureGuestAgent' -Name DependOnService -Type MultiString -Value DNS
+                Write-Verbose -Verbose "GuestAgent depends on DNS"
+            }
+            GetScript  = { @{} }
+            TestScript = { $false }
+            DependsOn  = "[WindowsFeature]DNS"
+        }
+	
         Script EnableDNSDiags
 	    {
       	    SetScript = { 
